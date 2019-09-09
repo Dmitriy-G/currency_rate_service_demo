@@ -1,5 +1,7 @@
 package currency.converter.demo.model;
 
+import java.util.Objects;
+
 public class Currency {
 
     private String mnemonics;
@@ -34,5 +36,21 @@ public class Currency {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Currency currency = (Currency) o;
+        return Objects.equals(mnemonics, currency.mnemonics) &&
+                Objects.equals(code, currency.code) &&
+                Objects.equals(description, currency.description);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(mnemonics, code, description);
     }
 }

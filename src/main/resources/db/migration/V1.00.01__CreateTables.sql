@@ -17,5 +17,6 @@ CREATE TABLE currency_journal
     rate_sell double precision NOT NULL
 );
 
+--Валюты которые требуются в задании создаются здесь
 INSERT INTO currency_list ("code", "mnemonics", "description") VALUES (840, 'USD', 'US Dollar');
 INSERT INTO currency_list ("code", "mnemonics", "description") VALUES (978, 'EUR', 'Euro');

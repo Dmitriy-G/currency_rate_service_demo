@@ -25,7 +25,10 @@ public class CurrencyConverterDAO  {
     private JdbcTemplate jdbcTemplate;
 
     // hibernate здесь нет, и его кешей тоже нет, кеши я реализовал через springframework.cache.annotation
-    // они не ограничены по времени, очищаются вручную, можно сделать TTL, но не вижу в этом смысла
+    // я дополнительно ничего не настраивал, это simple cache, который  по умолчанию в spring, ehcache здесь нет
+    // кеши не ограничены по времени, можно сделать TTL, но не вижу в этом смысла
+    // CACHE_MNEMONICS не очищается, т.к. как я понимаю записи в этой таблице не должны менятся
+    // CACHE_RATE очищается при добавлении новой записи в журнал
     private final String CACHE_RATE = "getByDate";
     private final String CACHE_MNEMONICS = "getByMnemonics";
 
@@ -62,7 +65,6 @@ public class CurrencyConverterDAO  {
         }
     }
 
-    // TODO: check cache for different case
     // запрос кешируется по входящим параметрам, если с такими параметрами метод уже вызывался
     // он вернет закешированный результат, и не будет выполнятся
     @Cacheable(cacheNames = CACHE_RATE)
@@ -82,7 +84,6 @@ public class CurrencyConverterDAO  {
         }
     }
 
-    // TODO: check cache for different case
     // при добавлении новых данных, кеш очищается
     @CacheEvict(cacheNames = CACHE_RATE)
     public void addNewRateToJournal(Integer code, Date date, Double rateBuy, Double rateSell) {

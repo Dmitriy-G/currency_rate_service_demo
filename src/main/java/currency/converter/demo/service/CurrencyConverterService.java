@@ -21,6 +21,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
@@ -48,7 +52,10 @@ public class CurrencyConverterService {
         if (currency == null) {
             throw new IllegalArgumentException();
         }
-        Date currentDate = new Date(System.currentTimeMillis());
+        // дата используется без времени, иначе считается что данные с разным временем разные
+        // и обращение к getRateByDate не кешируется
+        LocalDate localDate = LocalDate.now();
+        Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         // Если в базе нет записи для текущей даты, вернется null
         ExchangeRateDTO dto = currencyConverterDAO.getRateByDate(currency.getCode(), currentDate);
         if (dto == null) {

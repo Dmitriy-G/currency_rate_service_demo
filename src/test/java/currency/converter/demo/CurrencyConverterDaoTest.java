@@ -35,7 +35,7 @@ public class CurrencyConverterDaoTest extends AbstractTestNGSpringContextTests {
 
 
     @Test
-    public void getContactsByRegexTest() throws Exception {
+    public void getDateFromJournal() {
         // тест получения данных из журнала
         final ExchangeRateDTO data = currencyConverterDAO.getRateByDate(USD_CODE, TEST_DATE);
         assertThat(data).isNotNull();
