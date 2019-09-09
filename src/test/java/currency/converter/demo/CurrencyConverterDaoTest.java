@@ -22,6 +22,7 @@ public class CurrencyConverterDaoTest extends AbstractTestNGSpringContextTests {
     // тесты для dao
     // для тестов используется embedded postgres
     // таблицы, и данные создаются в миграции
+    // можно придумать больше кейсов, если нужно, можно тестировать контроллер через mockMVC
 
     @Autowired
     CurrencyConverterDAO currencyConverterDAO;

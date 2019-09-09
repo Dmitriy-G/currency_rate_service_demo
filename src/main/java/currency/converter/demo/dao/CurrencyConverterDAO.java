@@ -41,7 +41,8 @@ public class CurrencyConverterDAO  {
 
     // запрос кешируется по входящим параметрам, если с такими параметрами метод уже вызывался
     // он вернет закешированный результат, и не будет выполнятся
-    @Cacheable(cacheNames = CACHE_MNEMONICS)
+    // возвращаемый null не кешируется
+    @Cacheable(cacheNames = CACHE_MNEMONICS, unless="#result == null")
     public Currency getCurrencyFromList(String mnemonics) {
         // получение валюты из списка
         String sql = "select * from currency_list where mnemonics = ?";
@@ -67,7 +68,8 @@ public class CurrencyConverterDAO  {
 
     // запрос кешируется по входящим параметрам, если с такими параметрами метод уже вызывался
     // он вернет закешированный результат, и не будет выполнятся
-    @Cacheable(cacheNames = CACHE_RATE)
+    // возвращаемый null не кешируется
+    @Cacheable(cacheNames = CACHE_RATE, unless="#result == null")
     public ExchangeRateDTO getRateByDate(Integer code, Date date) {
         // получение курса из журнала, по дате
         LOGGER.info(date.getTime());
@@ -84,13 +86,19 @@ public class CurrencyConverterDAO  {
         }
     }
 
-    // при добавлении новых данных, кеш очищается
-    @CacheEvict(cacheNames = CACHE_RATE)
     public void addNewRateToJournal(Integer code, Date date, Double rateBuy, Double rateSell) {
         // добавляется новая запись в журнал
         String sql = "insert into currency_journal (code, date, rate_buy, rate_sell) VALUES (?, ?, ?, ?);";
         LOGGER.info("Call addNewRateToJournal method");
         LOGGER.info("Execute sql statement ".concat(sql));
         jdbcTemplate.update(sql, code, date, rateBuy, rateSell);
+        // при добавлении новых данных, кеш очищается
+        clearCacheRate();
+    }
+
+    // вызов этого метода очищает кеш
+    @CacheEvict(cacheNames = CACHE_RATE)
+    public void clearCacheRate(){
+        LOGGER.info("Cache for " + CACHE_RATE + " was cleared");
     }
 }

@@ -54,8 +54,9 @@ public class CurrencyConverterService {
         }
         // дата используется без времени, иначе считается что данные с разным временем разные
         // и обращение к getRateByDate не кешируется
-        LocalDate localDate = LocalDate.now();
-        Date currentDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date currentDate = Date.from(LocalDate.now().atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
         // Если в базе нет записи для текущей даты, вернется null
         ExchangeRateDTO dto = currencyConverterDAO.getRateByDate(currency.getCode(), currentDate);
         if (dto == null) {
